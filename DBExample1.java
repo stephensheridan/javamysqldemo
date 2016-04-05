@@ -13,12 +13,13 @@ import java.sql.Statement;
 			Class.forName("com.mysql.jdbc.Driver");
 			//Get a connection to the database
 			conn = DriverManager.getConnection("jdbc:mysql://localhost:8889/employee","root", "root");
-			print("");
 			print("Database connection successful.");
+			printNewline();
 		}
 		catch(Exception e){
 			// something went wrong with DB connection
 			print("Database Connection Error!");
+			printNewline();
 			e.printStackTrace();
 		}
 	}
@@ -28,11 +29,12 @@ import java.sql.Statement;
 		if (conn != null){
 			try{
 				conn.close();
-				print("");
 				print("Database closed successfully.");
+				printNewline();
 			}
 			catch(Exception e){
 				print("Error closing the DB");
+				
 			}
 		}
 	}
@@ -43,15 +45,17 @@ import java.sql.Statement;
 			// Create a statement object
 			Statement stmt = conn.createStatement();
 			//Execute a Query
-			ResultSet rs = stmt.executeQuery("select * from emp");
+			String query = "SELECT * FROM emp";
+			print("[SQL QUERY] " + query);
+			ResultSet rs = stmt.executeQuery(query);
 			//Process the results set
-			print("");
 			print("*** Employees ***");
 			while (rs.next()){
 				String sout = rs.getInt("empno") + "," + rs.getString("empname") + "," + 
 			                  rs.getString("empdob") + "," +  rs.getFloat("empsalary"); 
 				print(sout);
 			}
+			printNewline();
 			rs.close();
 		    stmt.close();
 		}
@@ -66,17 +70,57 @@ import java.sql.Statement;
 			Statement stmt = conn.createStatement();
 			//Execute a Query
 			String query = "UPDATE emp SET empsalary=" + amount + " WHERE empno=" + empno + ";";
-			stmt.executeUpdate(query);
+			print("[SQL QUERY] " + query);
+			int result = stmt.executeUpdate(query);
 			stmt.close();
-			print("");
 			print("Employee successfully updated.");
+			printNewline();
 		}
 		catch(Exception e){
 			print("Error executing UPDATE statemennt");
 		}
 	}
 	
+	public static void insertEmployee(String name, String DOB, float salary){
+		try{
+			// Create a statement object
+			Statement stmt = conn.createStatement();
+			//Execute a Query
+			
+			String query = "INSERT INTO emp(empname,empdob,empsalary) VALUES (";
+			query = query + "'" + name + "'" + ",'" + DOB + "'," + salary + ");"; 
+			print("[SQL QUERY] " + query);
+			int result = stmt.executeUpdate(query);
+			stmt.close();
+			print("New employee successfully inserted.");
+			printNewline();
+		}
+		catch(Exception e){
+			print("Error executing INSERT statemennt");
+			e.printStackTrace();
+		}
+	}
+	
+	public static void deleteEmployee(String empname){
+		try{
+			// Create a statement object
+			Statement stmt = conn.createStatement();
+			//Execute a Query
+			String query = "DELETE FROM emp WHERE empname ='" + empname + "';";
+			print("[SQL QUERY] " + query);
+			int result = stmt.executeUpdate(query);
+			stmt.close();
+			print("New employee successfully deleted.");
+			printNewline();
+		}
+		catch(Exception e){
+			print("Error executing INSERT statemennt");
+			e.printStackTrace();
+		}
+	}
+	
 	public static void print(String s){System.out.println(s);}
+	public static void printNewline(){System.out.println("");}
 	
 	public static void main(String[] args) {
 		
@@ -85,12 +129,24 @@ import java.sql.Statement;
 		
 		// List all employees from DB
 		listEmployees();
-		
-		
-		print("");
+				
 		print("Give Employee No. 1 a new salary");
 		// Update the salary of employee no. 1
 		updateEmpSalary(1, 200000.65f);
+		
+		// List all employees from DB
+		listEmployees();
+		
+		// Insert a new employee
+		print("Inserting a new employee called Mark Maguire...");
+		insertEmployee("Mark Maguire", "1967-04-23", 45000f);
+		
+		// List all employees from DB
+		listEmployees();
+		
+		// Delete an employee by empno
+		print("Delete Mark Maguire...");
+		deleteEmployee("Mark Maguire");
 		
 		// List all employees from DB
 		listEmployees();
