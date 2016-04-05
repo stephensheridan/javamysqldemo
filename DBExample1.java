@@ -146,7 +146,7 @@ import java.sql.Statement;
 		// List all employees from DB
 		listEmployees();
 		
-		// Delete an employee by empno
+		// Delete an employee by name (NOTE: should use empno and name to ensure correct employee)
 		print("Delete Mark Maguire...");
 		deleteEmployee("Mark Maguire");
 		
