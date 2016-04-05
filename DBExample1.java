@@ -87,6 +87,8 @@ import java.sql.Statement;
 			Statement stmt = conn.createStatement();
 			//Execute a Query
 			
+			// NOTE: empno is my primary key and it is set to auto-increment in my database schema
+			// so we only need to insert empname, empdob, empsalary and MYSQL will look after a new empno value for us.
 			String query = "INSERT INTO emp(empname,empdob,empsalary) VALUES (";
 			query = query + "'" + name + "'" + ",'" + DOB + "'," + salary + ");"; 
 			print("[SQL QUERY] " + query);
